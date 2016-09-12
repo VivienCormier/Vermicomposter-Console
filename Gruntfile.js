@@ -19,4 +19,15 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-shipit');
   grunt.loadNpmTasks('shipit-deploy');
+
+  grunt.shipit.remote('forever stop app.js', function (err, res) {
+    console.log("STOP");
+    console.log(res.stdout, res.stderr);
+  });
+
+  grunt.shipit.remote('forever start app.js', function (err, res) {
+    console.log("START");
+    console.log(res.stdout, res.stderr);
+  });
+
 };
