@@ -9,7 +9,11 @@ module.exports = function (grunt) {
         repositoryUrl: pkg.repository.url,
         ignores: ['.git', 'node_modules'],
         keepReleases: 2,
-        shallowClone: true
+        shallowClone: true,
+        npm: {
+          remote: false,
+          installFlags: ['--production']
+        },
       },
       prod: {
         servers: ['pi@192.168.0.30']
@@ -19,15 +23,27 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-shipit');
   grunt.loadNpmTasks('shipit-deploy');
+  grunt.loadNpmTasks('shipit-npm');
+  require('shipit-npm')(grunt.shipit);
 
-  grunt.shipit.remote('forever stop app.js', function (err, res) {
-    console.log("STOP");
-    console.log(res.stdout, res.stderr);
+  grunt.registerTask('forever_stop', function () {
+    grunt.shipit.remote('forever stop /home/pi/vermicomposter-console/current/app.js', this.async());
   });
 
-  grunt.shipit.remote('forever start app.js', function (err, res) {
-    console.log("START");
-    console.log(res.stdout, res.stderr);
+  grunt.registerTask('npm_install', function () {
+    grunt.shipit.remote('forever start /home/pi/vermicomposter-console/current/app.js', this.async());
+  });
+
+  grunt.registerTask('forever_start', function () {
+    grunt.shipit.remote('forever start /home/pi/vermicomposter-console/current/app.js', this.async());
+  });
+
+  grunt.shipit.on('deploy', function () {
+    grunt.task.run(['forever_stop']);
+  });
+
+  grunt.shipit.on('published', function () {
+    grunt.task.run(['forever_start']);
   });
 
 };
