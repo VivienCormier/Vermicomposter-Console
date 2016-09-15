@@ -1,15 +1,30 @@
-var express = require('express');
-var app = express();
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var serialport = require('serialport');
+var portName = '/dev/ttyACM0';
+
+var sp = new serialport(portName, {
+    baudRate: 9600,
+    dataBits: 8,
+    parity: 'none',
+    stopBits: 1,
+    flowControl: false,
+    parser: serialport.parsers.readline("\r\n")
+});
+
+sp.on('data', function(input) {
+    socket.emit('arduino', { data: input });
+});
+
+server.listen(8081);
 
 app.get('/', function (req, res) {
-   res.send('Hello World');
-})
+  res.sendfile(__dirname + '/index.html');
+});
 
-var server = app.listen(8081, function () {
-
-  var host = server.address().address
-  var port = server.address().port
-
-  console.log("Example app listening at http://%s:%s", host, port)
-
-})
+io.on('connection', function (socket) {
+  socket.on('arduino', function (data) {
+    console.log(data);
+  });
+});
