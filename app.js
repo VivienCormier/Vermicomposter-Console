@@ -14,17 +14,11 @@ var sp = new serialport(portName, {
 });
 
 sp.on('data', function(input) {
-    socket.emit('arduino', { data: input });
+    io.emit('arduino', { data: input });
 });
 
 server.listen(8081);
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
-});
-
-io.on('connection', function (socket) {
-  socket.on('arduino', function (data) {
-    console.log(data);
-  });
+  res.sendFile(__dirname + '/index.html');
 });
