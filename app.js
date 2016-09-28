@@ -17,6 +17,10 @@ sp.on('data', function(input) {
     io.emit('arduino', { data: input });
 });
 
+sp.on('error', function(err) {
+  console.log('Error: ', err.message);
+})
+
 server.listen(8081);
 
 app.get('/', function (req, res) {

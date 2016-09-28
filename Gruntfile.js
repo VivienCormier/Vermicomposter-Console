@@ -16,7 +16,7 @@ module.exports = function (grunt) {
         },
       },
       prod: {
-        servers: ['pi@192.168.0.30']
+        servers: ['pi@192.168.0.13']
       }
     }
   });
