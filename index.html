@@ -6,13 +6,16 @@
     <title>Vermicomposter</title>
   </head>
   <body>
-
+    <a href="#" id="simulation" >Simulation Arduino</a>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-      var socket = io.connect('http://192.168.0.13');
+      var socket = io.connect(window.location.href);
       socket.on('arduino', function (data) {
         console.log(data);
+      });
+      $( "#simulation" ).click(function() {
+        socket.emit('simulation_data', { test: '{"condensation":true,"temp_level_1":26.30,"temp_level_2":24.0}' });
       });
     </script>
   </body>

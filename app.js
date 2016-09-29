@@ -21,8 +21,20 @@ sp.on('error', function(err) {
   console.log('Error: ', err.message);
 })
 
+io.on('connection', function (socket) {
+  socket.on('simulation_data', function (data) {
+    var d = data["test"];
+    var json = JSON.parse(d);
+    saveData(json);
+  });
+});
+
 server.listen(8081);
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
+
+function saveData(data) {
+  console.log(data["temp_level_1"]);
+}
