@@ -1,22 +1,46 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Vermicomposter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vermicomposter-Console</title>
+    <link href="./static/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <a href="#" id="simulation" >Simulation Arduino</a>
+    <div class="container">
+      <h1>Vermicomposter-Console</h1>
+      <p>Ventilateur couvercle : <span id="fan_top_box_enabled">--</span></p>
+      <p>Condensation : <span id="condensation">--</span></p>
+      <p>Temperature Level 2 : <span id="temp_level_2">--</span>˚C</p>
+      <p>Ventilateur Level 1 : <span id="fan_level_1_enabled">--</span></p>
+      <p>Humidité Level 1 : <span id="humd_level_1">--</span>%</p>
+      <p>Temperature Level 1 : <span id="temp_level_1">--</span>˚C</p>
+      <a href="#" id="simulation" >Simulation Arduino</a>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="./static/js/bootstrap.min.js"></script>
     <script>
       var socket = io.connect(window.location.href);
       socket.on('arduino', function (data) {
         console.log(data);
       });
+      socket.on('last_data', function (data) {
+        console.log(data);
+        showLastData(data);
+      });
       $( "#simulation" ).click(function() {
         socket.emit('simulation_data', { test: '{"condensation":true,"temp_level_1":-127.00,"temp_level_2":20.56,"humd_level_1":27.00,"fan_top_box_enabled":true,"fan_level_1_enabled":false}' });
       });
+      function showLastData(data) {
+        $("#fan_top_box_enabled").text(data["fan_top_box_enabled"]);
+        $("#condensation").text(data["condensation"]);
+        $("#temp_level_2").text(data["temp_level_2"]);
+        $("#fan_level_1_enabled").text(data["fan_level_1_enabled"]);
+        $("#humd_level_1").text(data["humd_level_1"]);
+        $("#temp_level_1").text(data["temp_level_1"]);
+      }
     </script>
   </body>
 </html>

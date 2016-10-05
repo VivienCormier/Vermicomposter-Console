@@ -1,4 +1,5 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var serialport = require('serialport');
@@ -24,6 +25,9 @@ sp.on('error', function(err) {
 })
 
 io.on('connection', function (socket) {
+  nosql.top(1, function(err, selected) {
+    socket.emit('last_data', selected[0]);
+  });
   socket.on('simulation_data', function (data) {
     var d = data["test"];
     var json = JSON.parse(d);
@@ -33,10 +37,9 @@ io.on('connection', function (socket) {
 
 server.listen(8081);
 
+app.use('/static', express.static(__dirname + '/public'));
+
 app.get('/', function (req, res) {
-  nosql.each(function(doc, offset) {
-    console.log(doc);
-  });
   res.sendFile(__dirname + '/index.html');
 });
 
