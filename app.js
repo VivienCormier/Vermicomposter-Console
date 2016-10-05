@@ -15,7 +15,8 @@ var sp = new serialport(portName, {
 });
 
 sp.on('data', function(input) {
-    io.emit('arduino', { data: input });
+    var json = JSON.parse(input);
+    saveData(json);
 });
 
 sp.on('error', function(err) {
@@ -42,7 +43,6 @@ app.get('/', function (req, res) {
 function saveData(data) {
   data["date"] = getCurrentTimestamp();
   nosql.insert(data);
-  console.log(data);
 }
 
 function getCurrentTimestamp() {
