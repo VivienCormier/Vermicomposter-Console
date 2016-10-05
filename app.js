@@ -3,6 +3,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var serialport = require('serialport');
 var portName = '/dev/ttyACM0';
+var nosql = require('nosql').load('./database.nosql');
 
 var sp = new serialport(portName, {
     baudRate: 9600,
@@ -32,9 +33,18 @@ io.on('connection', function (socket) {
 server.listen(8081);
 
 app.get('/', function (req, res) {
+  nosql.each(function(doc, offset) {
+    console.log(doc);
+  });
   res.sendFile(__dirname + '/index.html');
 });
 
 function saveData(data) {
-  console.log(data["temp_level_1"]);
+  data["date"] = getCurrentTimestamp();
+  nosql.insert(data);
+  console.log(data);
+}
+
+function getCurrentTimestamp() {
+  return Math.floor(Date.now()/1000);
 }

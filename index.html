@@ -15,7 +15,7 @@
         console.log(data);
       });
       $( "#simulation" ).click(function() {
-        socket.emit('simulation_data', { test: '{"condensation":true,"temp_level_1":26.30,"temp_level_2":24.0}' });
+        socket.emit('simulation_data', { test: '{"condensation":true,"temp_level_1":-127.00,"temp_level_2":20.56,"humd_level_1":27.00,"fan_top_box_enabled":true,"fan_level_1_enabled":false}' });
       });
     </script>
   </body>
