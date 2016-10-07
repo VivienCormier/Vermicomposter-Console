@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vermicomposter-Console</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Vermicomposter-Console</h1>
+      <ul class="nav nav-tabs nav-justified">
+        <li role="dashboard" class="active"><a href="/">Dashboard</a></li>
+        <li role="temperature"><a href="/temperature/">Température</a></li>
+        <li role="humidity"><a href="/humdidity/">Humidité</a></li>
+      </ul>
+      <%= data %>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -6,6 +6,25 @@ var serialport = require('serialport');
 var portName = '/dev/ttyACM0';
 var nosql = require('nosql').load('./database.nosql');
 
+// Server
+server.listen(8081);
+
+app.set('view engine', 'ejs');
+app.use('/static', express.static(__dirname + '/public'));
+
+app.get('/', function (req, res) {
+  res.render(__dirname + '/pages/index');
+});
+
+app.get('/temperature/', function (req, res) {
+  res.render(__dirname + '/pages/temperature', {data: 'This is the data'});
+});
+
+app.get('/humidity/', function (req, res) {
+  res.render(__dirname + '/humidity');
+});
+
+// Arduino data
 var sp = new serialport(portName, {
     baudRate: 9600,
     dataBits: 8,
@@ -25,24 +44,12 @@ sp.on('error', function(err) {
 })
 
 io.on('connection', function (socket) {
-  nosql.top(1, function(err, selected) {
-    socket.emit('last_data', selected[0]);
-  });
-  socket.on('simulation_data', function (data) {
-    var d = data["test"];
-    var json = JSON.parse(d);
-    saveData(json);
+  getLastData(function (data) {
+    socket.emit('last_data', data);
   });
 });
 
-server.listen(8081);
-
-app.use('/static', express.static(__dirname + '/public'));
-
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
-});
-
+// Data
 function saveData(data) {
   data["date"] = getCurrentTimestamp();
   nosql.insert(data);
@@ -50,4 +57,16 @@ function saveData(data) {
 
 function getCurrentTimestamp() {
   return Math.floor(Date.now()/1000);
+}
+
+function getLastData(callback) {
+  nosql.sort(function(data) {
+      return data;
+  }, function(a, b) {
+      if (a.date < b.date)
+          return -1;
+      return 1;
+  }, function(err, datas, count) {
+      callback(datas[0]);
+  });
 }

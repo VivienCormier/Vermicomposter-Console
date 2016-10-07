@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/VivienCormier/Vermicomposter-Console#readme",
   "dependencies": {
+    "ejs": "^2.5.2",
     "express": "^4.14.0",
+    "express-ejs-layouts": "^2.2.0",
     "grunt": "^0.4.4",
     "grunt-shipit": "^1.0.0",
     "nosql": "^3.2.0",
