@@ -17,11 +17,27 @@ app.get('/', function (req, res) {
 });
 
 app.get('/temperature/', function (req, res) {
-  res.render(__dirname + '/pages/temperature', {data: 'This is the data'});
+  nosql.sort(function(data) {
+      return data;
+  }, function(a, b) {
+      if (a.date < b.date)
+          return -1;
+      return 1;
+  }, function(err, datas, count) {
+      res.render(__dirname + '/pages/temperature', {data: datas});
+  });
 });
 
 app.get('/humidity/', function (req, res) {
-  res.render(__dirname + '/humidity');
+  nosql.sort(function(data) {
+      return data;
+  }, function(a, b) {
+      if (a.date < b.date)
+          return -1;
+      return 1;
+  }, function(err, datas, count) {
+      res.render(__dirname + '/pages/humidity', {data: datas});
+  });
 });
 
 // Arduino data

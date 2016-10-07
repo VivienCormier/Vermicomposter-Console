@@ -20,8 +20,8 @@
       <h1>Vermicomposter-Console</h1>
       <ul class="nav nav-tabs nav-justified">
         <li role="dashboard"><a href="/">Dashboard</a></li>
-        <li role="temperature" class="active"><a href="/temperature/">Température</a></li>
-        <li role="humidity"><a href="/humidity/">Humidité</a></li>
+        <li role="temperature"><a href="/temperature/">Température</a></li>
+        <li role="humidity" class="active"><a href="/humidity/">Humidité</a></li>
       </ul>
       <div class="graph" style="text-align: center;"></div>
     </div>
@@ -41,12 +41,7 @@
       // define the 1st line
       var valueline = d3.line()
           .x(function(d) { return x(d.date); })
-          .y(function(d) { return y(d.temp_level_1); });
-
-      // define the 2nd line
-      var valueline2 = d3.line()
-          .x(function(d) { return x(d.date); })
-          .y(function(d) { return y(d.temp_level_2); });
+          .y(function(d) { return y(d.humd_level_1); });
 
       // append the svg obgect to the body of the page
       // appends a 'group' element to 'svg'
@@ -63,16 +58,15 @@
       // format the data
       data.forEach(function(d) {
           d.date = new Date(d.date * 1000);
-          d.temp_level_1 = +d.temp_level_1;
-          d.temp_level_2 = +d.temp_level_2;
+          d.humd_level_1 = +d.humd_level_1;
       });
 
       // Scale the range of the data
       x.domain(d3.extent(data, function(d) { return d.date; }));
       y.domain([d3.min(data, function(d) {
-    	  return Math.min(d.temp_level_1, d.temp_level_2);
+    	  return Math.min(d.humd_level_1);
       }), d3.max(data, function(d) {
-    	  return Math.max(d.temp_level_1, d.temp_level_2);
+    	  return Math.max(d.humd_level_1);
       })]);
 
       // Add the valueline path.
@@ -80,13 +74,6 @@
           .data([data])
           .attr("class", "line")
           .attr("d", valueline);
-
-      // Add the valueline2 path.
-      svg.append("path")
-          .data([data])
-          .attr("class", "line")
-          .style("stroke", "red")
-          .attr("d", valueline2);
 
       // Add the X Axis
       svg.append("g")
