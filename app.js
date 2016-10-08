@@ -36,8 +36,22 @@ app.get('/humidity/', function (req, res) {
       if (a.date < b.date)
           return -1;
       return 1;
-  }, function(err, datas, count) {
-      res.render(__dirname + '/pages/humidity', {data: datas});
+  }, function(err, data, count) {
+    var data_humidity_level_1 = [];
+    var data_humidity_level_2 = [];
+    data.forEach(function (row) {
+      if (row.humd_level_1) {
+        data_humidity_level_1.push(row);
+      }
+      if (row.humd_level_2) {
+        data_humidity_level_2.push(row);
+      }
+    });
+    res.render(__dirname + '/pages/humidity', {
+      full_data: data,
+      data_humidity_level_1: data_humidity_level_1,
+      data_humidity_level_2: data_humidity_level_2
+    });
   });
 });
 
@@ -78,6 +92,6 @@ function getLastData(callback) {
           return -1;
       return 1;
   }, function(err, datas, count) {
-      callback(datas[0]);
+      callback(datas[count-1]);
   });
 }

@@ -7,11 +7,20 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <style> /* set the CSS */
 
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 2px;
-}
+    .line {
+      fill: none;
+      stroke-width: 2px;
+    }
+
+    /*D2FFD6*/
+
+    .fan_on {
+      fill: #98DEF2;
+    }
+
+    .fan_off {
+      fill: #101719;
+    }
 
 </style>
   </head>
@@ -43,6 +52,11 @@
           .x(function(d) { return x(d.date); })
           .y(function(d) { return y(d.humd_level_1); });
 
+      // define the 2nd line
+      var valueline2 = d3.line()
+          .x(function(d) { return x(d.date); })
+          .y(function(d) { return y(d.humd_level_2); });
+
       // append the svg obgect to the body of the page
       // appends a 'group' element to 'svg'
       // moves the 'group' element to the top left margin
@@ -53,32 +67,58 @@
           .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")");
 
-      var data = <%- JSON.stringify(data) %>;
+      var full_data = <%- JSON.stringify(full_data) %>;
+      var data_humidity_level_1 = <%- JSON.stringify(data_humidity_level_1) %>;
+      var data_humidity_level_2 = <%- JSON.stringify(data_humidity_level_2) %>;
 
       // format the data
-      data.forEach(function(d) {
+      full_data.forEach(function(d) {
+          d.date = new Date(d.date * 1000);
+          var humd_level_1 = ((1023 - d.humd_level_1) * 100 / 1023).toFixed(2);
+          var humd_level_2 = ((1023 - d.humd_level_2) * 100 / 1023).toFixed(2);
+          d.humd_level_1 = +humd_level_1;
+          d.humd_level_2 = +humd_level_2;
+      });
+
+      // format the data
+      data_humidity_level_1.forEach(function(d) {
           d.date = new Date(d.date * 1000);
           var humd_level_1 = ((1023 - d.humd_level_1) * 100 / 1023).toFixed(2);
           d.humd_level_1 = +humd_level_1;
           d.fan_level_1_enabled = d.fan_level_1_enabled;
       });
 
+      // format the data
+      data_humidity_level_2.forEach(function(d) {
+          d.date = new Date(d.date * 1000);
+          var humd_level_2 = ((1023 - d.humd_level_2) * 100 / 1023).toFixed(2);
+          d.humd_level_2 = +humd_level_2;
+          d.fan_top_box_enabled = d.fan_top_box_enabled;
+      });
+
       // Scale the range of the data
-      x.domain(d3.extent(data, function(d) { return d.date; }));
-      y.domain([d3.min(data, function(d) {
-    	  return Math.min(d.humd_level_1);
-      }), d3.max(data, function(d) {
-    	  return Math.max(d.humd_level_1);
+      x.domain(d3.extent(full_data, function(d) { return d.date; }));
+      y.domain([d3.min(full_data, function(d) {
+    	  return Math.min(d.humd_level_1, d.humd_level_2);
+      }), d3.max(full_data, function(d) {
+    	  return Math.max(d.humd_level_1, d.humd_level_2);
       })]);
 
       // Add the valueline path.
       svg.append("path")
-          .data([data])
+          .data([data_humidity_level_1])
           .attr("class", "line")
+          .style("stroke", "#437F49")
           .attr("d", valueline);
 
+      svg.append("path")
+          .data([data_humidity_level_2])
+          .attr("class", "line")
+          .style("stroke", "#83D493")
+          .attr("d", valueline2);
+
       svg.selectAll("g.dot")
-        .data([data])
+        .data([data_humidity_level_1])
         .enter().append("g")
         .selectAll("circle")
         .data(function(d) { return d; })
@@ -92,6 +132,22 @@
         })
         .attr("cx", function(d) { return x(d.date); })
         .attr("cy", function(d) { return y(d.humd_level_1); })
+
+      svg.selectAll("g.dot")
+        .data([data_humidity_level_2])
+        .enter().append("g")
+        .selectAll("circle")
+        .data(function(d) { return d; })
+        .enter().append("circle")
+        .attr("r", 4)
+        .attr("class", function(d) {
+          if (d.fan_top_box_enabled) {
+            return "fan_on";
+          }
+          return "fan_off";
+        })
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.humd_level_2); })
 
       // Add the X Axis
       svg.append("g")

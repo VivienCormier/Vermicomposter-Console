@@ -16,6 +16,7 @@
       </ul>
       <p>Ventilateur couvercle : <span id="fan_top_box_enabled">--</span></p>
       <p>Condensation : <span id="condensation">--</span></p>
+      <p>Humidité Level 2 : <span id="humd_level_2">--</span>%</p>
       <p>Temperature Level 2 : <span id="temp_level_2">--</span>˚C</p>
       <p>Ventilateur Level 1 : <span id="fan_level_1_enabled">--</span></p>
       <p>Humidité Level 1 : <span id="humd_level_1">--</span>%</p>
@@ -27,6 +28,8 @@
       var data = <%- JSON.stringify(data) %>;
       $("#fan_top_box_enabled").text(data["fan_top_box_enabled"]);
       $("#condensation").text(data["condensation"]);
+      var humd_level_2 = ((1023 - data["humd_level_2"]) * 100 / 1023).toFixed(2);
+      $("#humd_level_2").text(humd_level_2);
       $("#temp_level_2").text(data["temp_level_2"]);
       $("#fan_level_1_enabled").text(data["fan_level_1_enabled"]);
       var humd_level_1 = ((1023 - data["humd_level_1"]) * 100 / 1023).toFixed(2);
