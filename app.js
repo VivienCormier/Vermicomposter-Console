@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
 var serialport = require('serialport');
 var portName = '/dev/ttyACM0';
 var nosql = require('nosql').load('./database.nosql');
@@ -13,7 +12,9 @@ app.set('view engine', 'ejs');
 app.use('/static', express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
-  res.render(__dirname + '/pages/index');
+  getLastData(function (datas) {
+    res.render(__dirname + '/pages/index', {data: datas});
+  });
 });
 
 app.get('/temperature/', function (req, res) {
@@ -57,12 +58,6 @@ sp.on('data', function(input) {
 
 sp.on('error', function(err) {
   console.log('Error: ', err.message);
-})
-
-io.on('connection', function (socket) {
-  getLastData(function (data) {
-    socket.emit('last_data', data);
-  });
 });
 
 // Data

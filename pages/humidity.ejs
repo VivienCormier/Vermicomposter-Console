@@ -58,7 +58,9 @@
       // format the data
       data.forEach(function(d) {
           d.date = new Date(d.date * 1000);
-          d.humd_level_1 = +d.humd_level_1;
+          var humd_level_1 = ((1023 - d.humd_level_1) * 100 / 1023).toFixed(2);
+          d.humd_level_1 = +humd_level_1;
+          d.fan_level_1_enabled = d.fan_level_1_enabled;
       });
 
       // Scale the range of the data
@@ -74,6 +76,22 @@
           .data([data])
           .attr("class", "line")
           .attr("d", valueline);
+
+      svg.selectAll("g.dot")
+        .data([data])
+        .enter().append("g")
+        .selectAll("circle")
+        .data(function(d) { return d; })
+        .enter().append("circle")
+        .attr("r", 4)
+        .attr("class", function(d) {
+          if (d.fan_level_1_enabled) {
+            return "fan_on";
+          }
+          return "fan_off";
+        })
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.humd_level_1); })
 
       // Add the X Axis
       svg.append("g")

@@ -12,7 +12,7 @@
       <ul class="nav nav-tabs nav-justified">
         <li role="dashboard" class="active"><a href="/">Dashboard</a></li>
         <li role="temperature"><a href="/temperature/">Température</a></li>
-        <li role="humidity"><a href="/humdidity/">Humidité</a></li>
+        <li role="humidity"><a href="/humidity/">Humidité</a></li>
       </ul>
       <p>Ventilateur couvercle : <span id="fan_top_box_enabled">--</span></p>
       <p>Condensation : <span id="condensation">--</span></p>
@@ -20,30 +20,18 @@
       <p>Ventilateur Level 1 : <span id="fan_level_1_enabled">--</span></p>
       <p>Humidité Level 1 : <span id="humd_level_1">--</span>%</p>
       <p>Temperature Level 1 : <span id="temp_level_1">--</span>˚C</p>
-      <a href="#" id="simulation" >Simulation Arduino</a>
     </div>
-    <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/static/js/bootstrap.min.js"></script>
     <script>
-      var socket = io.connect(window.location.href);
-      socket.on('last_data', function (data) {
-        console.log(data);
-        showLastData(data);
-      });
-      $( "#simulation" ).click(function() {
-        socket.emit('simulation_data', { test: '{"condensation":true,"temp_level_1":-127.00,"temp_level_2":20.56,"humd_level_1":27.00,"fan_top_box_enabled":true,"fan_level_1_enabled":false}' });
-      });
-      function showLastData(data) {
-        $("#fan_top_box_enabled").text(data["fan_top_box_enabled"]);
-        $("#condensation").text(data["condensation"]);
-        $("#temp_level_2").text(data["temp_level_2"]);
-        $("#fan_level_1_enabled").text(data["fan_level_1_enabled"]);
-        var humd_level_1 = ((1023 - data["humd_level_1"]) * 100 / 1023).toFixed(2);
-        $("#humd_level_1").text(humd_level_1);
-        $("#temp_level_1").text(data["temp_level_1"]);
-      }
+      var data = <%- JSON.stringify(data) %>;
+      $("#fan_top_box_enabled").text(data["fan_top_box_enabled"]);
+      $("#condensation").text(data["condensation"]);
+      $("#temp_level_2").text(data["temp_level_2"]);
+      $("#fan_level_1_enabled").text(data["fan_level_1_enabled"]);
+      var humd_level_1 = ((1023 - data["humd_level_1"]) * 100 / 1023).toFixed(2);
+      $("#humd_level_1").text(humd_level_1);
+      $("#temp_level_1").text(data["temp_level_1"]);
     </script>
   </body>
 </html>
