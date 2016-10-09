@@ -7,32 +7,47 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <div class="container">
-      <h1>Vermicomposter-Console</h1>
-      <ul class="nav nav-tabs nav-justified">
+    <div class="container" style="margin-top: 30px;">
+      <h1 style="text-align: center;">Console Vermicomposter</h1>
+      <ul class="nav nav-tabs nav-justified" style="margin-top: 60px;">
         <li role="dashboard" class="active"><a href="/">Dashboard</a></li>
-        <li role="temperature"><a href="/temperature/">Température</a></li>
-        <li role="humidity"><a href="/humidity/">Humidité</a></li>
+        <li role="temperature"><a href="/temperature/">Temperature</a></li>
+        <li role="humidity"><a href="/humidity/">Humidity</a></li>
       </ul>
-      <p>Ventilateur couvercle : <span id="fan_top_box_enabled">--</span></p>
-      <p>Condensation : <span id="condensation">--</span></p>
-      <p>Humidité Level 2 : <span id="humd_level_2">--</span>%</p>
-      <p>Temperature Level 2 : <span id="temp_level_2">--</span>˚C</p>
-      <p>Ventilateur Level 1 : <span id="fan_level_1_enabled">--</span></p>
-      <p>Humidité Level 1 : <span id="humd_level_1">--</span>%</p>
-      <p>Temperature Level 1 : <span id="temp_level_1">--</span>˚C</p>
+      <h3>Couvercle :</h2>
+      <p>Fan <span id="fan_top_box_enabled">--</span></p>
+      <p>Condensation <span id="condensation">--</span></p>
+      <h3>Level 2 :</h2>
+      <p>Humidity at <span id="humd_level_2">--</span>%</p>
+      <p>Temperature at <span id="temp_level_2">--</span>˚C</p>
+      <h3>Level 1 :</h2>
+      <p>Fan <span id="fan_level_1_enabled">--</span></p>
+      <p>Humidity at <span id="humd_level_1">--</span>%</p>
+      <p>Temperature at <span id="temp_level_1">--</span>˚C</p>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script>
       var data = <%- JSON.stringify(data) %>;
-      $("#fan_top_box_enabled").text(data["fan_top_box_enabled"]);
-      $("#condensation").text(data["condensation"]);
-      var humd_level_2 = ((1023 - data["humd_level_2"]) * 100 / 1023).toFixed(2);
+      if (data["fan_top_box_enabled"]) {
+        $("#fan_top_box_enabled").text("activate");
+      } else {
+        $("#fan_top_box_enabled").text("deactivate");
+      }
+      if (data["fan_top_box_enabled"]) {
+        $("#condensation").text("detected");
+      } else {
+        $("#condensation").text("not detected");
+      }
+      var humd_level_2 = ((357 - data["humd_level_2"]) * 100 / 357).toFixed(2);
       $("#humd_level_2").text(humd_level_2);
       $("#temp_level_2").text(data["temp_level_2"]);
-      $("#fan_level_1_enabled").text(data["fan_level_1_enabled"]);
-      var humd_level_1 = ((1023 - data["humd_level_1"]) * 100 / 1023).toFixed(2);
+      if (data["fan_level_1_enabled"]) {
+        $("#fan_level_1_enabled").text("activate");
+      } else {
+        $("#fan_level_1_enabled").text("deactivate");
+      }
+      var humd_level_1 = ((357 - data["humd_level_1"]) * 100 / 357).toFixed(2);
       $("#humd_level_1").text(humd_level_1);
       $("#temp_level_1").text(data["temp_level_1"]);
     </script>

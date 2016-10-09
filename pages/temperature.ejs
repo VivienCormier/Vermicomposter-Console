@@ -25,9 +25,9 @@
 </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Vermicomposter-Console</h1>
-      <ul class="nav nav-tabs nav-justified">
+    <div class="container" style="margin-top: 30px;">
+      <h1 style="text-align: center;">Console Vermicomposter</h1>
+      <ul class="nav nav-tabs nav-justified" style="margin-top: 60px;">
         <li role="dashboard"><a href="/">Dashboard</a></li>
         <li role="temperature" class="active"><a href="/temperature/">Température</a></li>
         <li role="humidity"><a href="/humidity/">Humidité</a></li>
@@ -106,7 +106,7 @@
         .selectAll("circle")
         .data(function(d) { return d; })
         .enter().append("circle")
-        .attr("r", 4)
+        .attr("r", 3)
         .attr("class", function(d) {
           if (d.fan_top_box_enabled) {
             return "fan_on";
@@ -122,7 +122,7 @@
           .selectAll("circle")
           .data(function(d) { return d; })
           .enter().append("circle")
-          .attr("r", 4)
+          .attr("r", 3)
           .attr("class", function(d) {
             if (d.fan_level_1_enabled) {
               return "fan_on";
