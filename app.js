@@ -24,8 +24,39 @@ app.get('/temperature/', function (req, res) {
       if (a.date < b.date)
           return -1;
       return 1;
-  }, function(err, datas, count) {
-      res.render(__dirname + '/pages/temperature', {data: datas});
+  }, function(err, data, count) {
+    var data_level_1 = [];
+    var data_level_2 = [];
+    var data_level_3 = [];
+    data.forEach(function (row) {
+      if (row.temp_level_1) {
+        var new_row = JSON.parse(JSON.stringify(row));
+        row.data_level_1 = row.temp_level_1;
+        new_row.data = row.temp_level_1;
+        new_row.fan = row.fan_level_1_enabled;
+        data_level_1.push(new_row);
+      }
+      if (row.temp_level_2) {
+        var new_row = JSON.parse(JSON.stringify(row));
+        row.data_level_2 = row.temp_level_2;
+        new_row.data = row.temp_level_2;
+        new_row.fan = row.fan_level_2_enabled;
+        data_level_2.push(new_row);
+      }
+      if (row.temp_level_3) {
+        var new_row = JSON.parse(JSON.stringify(row));
+        row.data_level_3 = row.temp_level_3;
+        new_row.data = row.temp_level_3;
+        new_row.fan = row.fan_level_3_enabled;
+        data_level_3.push(new_row);
+      }
+    });
+    res.render(__dirname + '/pages/temperature', {
+      full_data: data,
+      data_level_1: data_level_1,
+      data_level_2: data_level_2,
+      data_level_3: data_level_3
+    });
   });
 });
 
@@ -37,20 +68,40 @@ app.get('/humidity/', function (req, res) {
           return -1;
       return 1;
   }, function(err, data, count) {
-    var data_humidity_level_1 = [];
-    var data_humidity_level_2 = [];
+    var data_level_1 = [];
+    var data_level_2 = [];
+    var data_level_3 = [];
     data.forEach(function (row) {
       if (row.humd_level_1) {
-        data_humidity_level_1.push(row);
+        var new_row = JSON.parse(JSON.stringify(row));
+        var humd = ((357 - row.humd_level_1) * 100 / 357).toFixed(2);
+        row.data_level_1 = humd;
+        new_row.data = humd;
+        new_row.fan = row.fan_level_1_enabled;
+        data_level_1.push(new_row);
       }
       if (row.humd_level_2) {
-        data_humidity_level_2.push(row);
+        var new_row = JSON.parse(JSON.stringify(row));
+        var humd = ((357 - row.humd_level_2) * 100 / 357).toFixed(2);
+        row.data_level_2 = humd;
+        new_row.data = humd;
+        new_row.fan = row.fan_level_2_enabled;
+        data_level_2.push(new_row);
+      }
+      if (row.humd_level_3) {
+        var new_row = JSON.parse(JSON.stringify(row));
+        var humd = ((357 - row.humd_level_3) * 100 / 357).toFixed(2);
+        row.data_level_3 = humd;
+        new_row.data = humd;
+        new_row.fan = row.fan_level_3_enabled;
+        data_level_3.push(new_row);
       }
     });
     res.render(__dirname + '/pages/humidity', {
       full_data: data,
-      data_humidity_level_1: data_humidity_level_1,
-      data_humidity_level_2: data_humidity_level_2
+      data_level_1: data_level_1,
+      data_level_2: data_level_2,
+      data_level_3: data_level_3
     });
   });
 });

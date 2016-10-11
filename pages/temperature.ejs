@@ -5,32 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vermicomposter-Console</title>
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <style> /* set the CSS */
-
-    .line {
-      fill: none;
-      stroke-width: 2px;
-    }
-
-    /*D2FFD6*/
-
-    .fan_on {
-      fill: #98DEF2;
-    }
-
-    .fan_off {
-      fill: #101719;
-    }
-
-</style>
+    <link href="/static/css/style.css" rel="stylesheet">
   </head>
   <body>
     <div class="container" style="margin-top: 30px;">
       <h1 style="text-align: center;">Console Vermicomposter</h1>
       <ul class="nav nav-tabs nav-justified" style="margin-top: 60px;">
         <li role="dashboard"><a href="/">Dashboard</a></li>
-        <li role="temperature" class="active"><a href="/temperature/">Température</a></li>
-        <li role="humidity"><a href="/humidity/">Humidité</a></li>
+        <li role="temperature" class="active"><a href="/temperature/">Temperature</a></li>
+        <li role="humidity"><a href="/humidity/">Humidity</a></li>
       </ul>
       <div class="graph" style="text-align: center;"></div>
     </div>
@@ -38,109 +21,11 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
-      // set the dimensions and margins of the graph
-      var margin = {top: 20, right: 20, bottom: 30, left: 50},
-          width = 960 - margin.left - margin.right,
-          height = 500 - margin.top - margin.bottom;
-
-      // set the ranges
-      var x = d3.scaleTime().range([0, width]);
-      var y = d3.scaleLinear().range([height, 0]);
-
-      // define the 1st line
-      var valueline = d3.line()
-          .x(function(d) { return x(d.date); })
-          .y(function(d) { return y(d.temp_level_1); });
-
-      // define the 2nd line
-      var valueline2 = d3.line()
-          .x(function(d) { return x(d.date); })
-          .y(function(d) { return y(d.temp_level_2); });
-
-      // append the svg obgect to the body of the page
-      // appends a 'group' element to 'svg'
-      // moves the 'group' element to the top left margin
-      var svg = d3.select(".graph").append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-          .attr("transform",
-                "translate(" + margin.left + "," + margin.top + ")");
-
-      var data = <%- JSON.stringify(data) %>;
-
-      // format the data
-      data.forEach(function(d) {
-          d.date = new Date(d.date * 1000);
-          d.temp_level_1 = +d.temp_level_1;
-          d.temp_level_2 = +d.temp_level_2;
-          d.fan_top_box_enabled = d.fan_top_box_enabled;
-          d.fan_level_1_enabled = d.fan_level_1_enabled;
-      });
-
-      // Scale the range of the data
-      x.domain(d3.extent(data, function(d) { return d.date; }));
-      y.domain([d3.min(data, function(d) {
-    	  return Math.min(d.temp_level_1, d.temp_level_2);
-      }), d3.max(data, function(d) {
-    	  return Math.max(d.temp_level_1, d.temp_level_2);
-      })]);
-
-      // Add the valueline path.
-      svg.append("path")
-          .data([data])
-          .attr("class", "line")
-          .style("stroke", "#437F49")
-          .attr("d", valueline);
-
-      // Add the valueline2 path.
-      svg.append("path")
-          .data([data])
-          .attr("class", "line")
-          .style("stroke", "#83D493")
-          .attr("d", valueline2);
-
-      svg.selectAll("g.dot")
-        .data([data])
-        .enter().append("g")
-        .selectAll("circle")
-        .data(function(d) { return d; })
-        .enter().append("circle")
-        .attr("r", 3)
-        .attr("class", function(d) {
-          if (d.fan_top_box_enabled) {
-            return "fan_on";
-          }
-          return "fan_off";
-        })
-        .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y(d.temp_level_2); })
-
-        svg.selectAll("g.dot")
-          .data([data])
-          .enter().append("g")
-          .selectAll("circle")
-          .data(function(d) { return d; })
-          .enter().append("circle")
-          .attr("r", 3)
-          .attr("class", function(d) {
-            if (d.fan_level_1_enabled) {
-              return "fan_on";
-            }
-            return "fan_off";
-          })
-          .attr("cx", function(d) { return x(d.date); })
-          .attr("cy", function(d) { return y(d.temp_level_1); })
-
-      // Add the X Axis
-      svg.append("g")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x));
-
-      // Add the Y Axis
-      svg.append("g")
-          .call(d3.axisLeft(y));
-
-  </script>
+      var full_data = <%- JSON.stringify(full_data) %>;
+      var data_level_1 = <%- JSON.stringify(data_level_1) %>;
+      var data_level_2 = <%- JSON.stringify(data_level_2) %>;
+      var data_level_3 = <%- JSON.stringify(data_level_3) %>;
+    </script>
+    <script src="/static/js/graph.js"></script>
   </body>
 </html>

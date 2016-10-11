@@ -1,0 +1,12 @@
+.line {
+  fill: none;
+  stroke-width: 2px;
+}
+
+.fan_on {
+  fill: #98DEF2;
+}
+
+.fan_off {
+  fill: transparent;
+}
