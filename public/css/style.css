@@ -10,3 +10,8 @@
 .fan_off {
   fill: transparent;
 }
+
+.chrono {
+  text-align: center;
+  margin-top: 20px;
+}
