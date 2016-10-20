@@ -18,7 +18,12 @@
       <h3>Couvercle :</h2>
       <p>Fan <span id="fan_top_box_enabled">--</span></p>
       <p>Condensation <span id="condensation">--</span></p>
+      <h3>Level 3 :</h2>
+      <p>Fan <span id="fan_level_3_enabled">--</span></p>
+      <p>Humidity at <span id="humd_level_3">--</span>%</p>
+      <p>Temperature at <span id="temp_level_3">--</span>˚C</p>
       <h3>Level 2 :</h2>
+      <p>Fan <span id="fan_level_2_enabled">--</span></p>
       <p>Humidity at <span id="humd_level_2">--</span>%</p>
       <p>Temperature at <span id="temp_level_2">--</span>˚C</p>
       <h3>Level 1 :</h2>
@@ -40,9 +45,25 @@
       } else {
         $("#condensation").text("not detected");
       }
+      // Level 3
+      if (data["fan_level_3_enabled"]) {
+        $("#fan_level_3_enabled").text("activate");
+      } else {
+        $("#fan_level_3_enabled").text("deactivate");
+      }
+      var humd_level_3 = ((357 - data["humd_level_3"]) * 100 / 357).toFixed(2);
+      $("#humd_level_3").text(humd_level_3);
+      $("#temp_level_3").text(data["temp_level_3"]);
+      // Level 2
+      if (data["fan_level_2_enabled"]) {
+        $("#fan_level_2_enabled").text("activate");
+      } else {
+        $("#fan_level_2_enabled").text("deactivate");
+      }
       var humd_level_2 = ((357 - data["humd_level_2"]) * 100 / 357).toFixed(2);
       $("#humd_level_2").text(humd_level_2);
       $("#temp_level_2").text(data["temp_level_2"]);
+      // Level 1
       if (data["fan_level_1_enabled"]) {
         $("#fan_level_1_enabled").text("activate");
       } else {
