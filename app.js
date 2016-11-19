@@ -91,7 +91,7 @@ app.get('/humidity/', function (req, res) {
         full_data.push(row);
         if (row.humd_level_1) {
           var new_row = JSON.parse(JSON.stringify(row));
-          var humd = ((357 - row.humd_level_1) * 100 / 357).toFixed(2);
+          var humd = ((1023 - row.humd_level_1) * 100 / 1023).toFixed(2);
           row.data_level_1 = humd;
           new_row.data = humd;
           new_row.fan = row.fan_level_1_enabled;
@@ -99,7 +99,7 @@ app.get('/humidity/', function (req, res) {
         }
         if (row.humd_level_2) {
           var new_row = JSON.parse(JSON.stringify(row));
-          var humd = ((357 - row.humd_level_2) * 100 / 357).toFixed(2);
+          var humd = ((1023 - row.humd_level_2) * 100 / 1023).toFixed(2);
           row.data_level_2 = humd;
           new_row.data = humd;
           new_row.fan = row.fan_level_2_enabled;
@@ -107,7 +107,7 @@ app.get('/humidity/', function (req, res) {
         }
         if (row.humd_level_3) {
           var new_row = JSON.parse(JSON.stringify(row));
-          var humd = ((357 - row.humd_level_3) * 100 / 357).toFixed(2);
+          var humd = ((1023 - row.humd_level_3) * 100 / 1023).toFixed(2);
           row.data_level_3 = humd;
           new_row.data = humd;
           new_row.fan = row.fan_level_3_enabled || row.fan_top_box_enabled;

@@ -51,7 +51,7 @@
       } else {
         $("#fan_level_3_enabled").text("deactivate");
       }
-      var humd_level_3 = ((357 - data["humd_level_3"]) * 100 / 357).toFixed(2);
+      var humd_level_3 = ((1023 - data["humd_level_3"]) * 100 / 1023).toFixed(2);
       $("#humd_level_3").text(humd_level_3);
       $("#temp_level_3").text(data["temp_level_3"]);
       // Level 2
@@ -60,7 +60,7 @@
       } else {
         $("#fan_level_2_enabled").text("deactivate");
       }
-      var humd_level_2 = ((357 - data["humd_level_2"]) * 100 / 357).toFixed(2);
+      var humd_level_2 = ((1023 - data["humd_level_2"]) * 100 / 1023).toFixed(2);
       $("#humd_level_2").text(humd_level_2);
       $("#temp_level_2").text(data["temp_level_2"]);
       // Level 1
@@ -69,7 +69,7 @@
       } else {
         $("#fan_level_1_enabled").text("deactivate");
       }
-      var humd_level_1 = ((357 - data["humd_level_1"]) * 100 / 357).toFixed(2);
+      var humd_level_1 = ((1023 - data["humd_level_1"]) * 100 / 1023).toFixed(2);
       $("#humd_level_1").text(humd_level_1);
       $("#temp_level_1").text(data["temp_level_1"]);
     </script>
