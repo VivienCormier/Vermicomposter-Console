@@ -30,6 +30,8 @@
       <p>Fan <span id="fan_level_1_enabled">--</span></p>
       <p>Humidity at <span id="humd_level_1">--</span>%</p>
       <p>Temperature at <span id="temp_level_1">--</span>˚C</p>
+      <h3>Error :</h2>
+      <p><span id="error_message">No error</span></p>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
@@ -72,6 +74,12 @@
       var humd_level_1 = ((1023 - data["humd_level_1"]) * 100 / 1023).toFixed(2);
       $("#humd_level_1").text(humd_level_1);
       $("#temp_level_1").text(data["temp_level_1"]);
+      // Error
+      if (data["error_message"]) {
+        $("#error_message").text(data["error_message"]);
+      } else {
+        $("#error_message").text("No error");
+      }
     </script>
   </body>
 </html>
