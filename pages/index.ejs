@@ -17,7 +17,7 @@
       </ul>
       <h3>Couvercle :</h2>
       <p>Fan <span id="fan_top_box_enabled">--</span></p>
-      <p>Condensation <span id="condensation">--</span></p>
+      <p>Condensation at <span id="condensation">--</span>%</p>
       <h3>Level 3 :</h2>
       <p>Fan <span id="fan_level_3_enabled">--</span></p>
       <p>Humidity at <span id="humd_level_3">--</span>%</p>
@@ -42,11 +42,8 @@
       } else {
         $("#fan_top_box_enabled").text("deactivate");
       }
-      if (data["fan_top_box_enabled"]) {
-        $("#condensation").text("detected");
-      } else {
-        $("#condensation").text("not detected");
-      }
+      var condensation_top = ((1023 - data["condensation_top"]) * 100 / 1023).toFixed(2);
+      $("#condensation").text(condensation_top);
       // Level 3
       if (data["fan_level_3_enabled"]) {
         $("#fan_level_3_enabled").text("activate");

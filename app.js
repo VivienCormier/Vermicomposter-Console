@@ -17,6 +17,45 @@ app.get('/', function (req, res) {
   });
 });
 
+app.get('/condensation/', function (req, res) {
+  var day = 1;
+  if (req.query['day']) {
+    day = req.query['day'];
+  }
+  var before_date = getCurrentTimestamp() - 60 * 60 * 24 * day;
+  nosql.sort(function(data) {
+      return data;
+  }, function(a, b) {
+      if (a.date < b.date)
+          return -1;
+      return 1;
+  }, function(err, data, count) {
+    var data_level_1 = [];
+    var data_level_2 = [];
+    var data_level_3 = [];
+    var full_data = [];
+    data.forEach(function (row) {
+      if (row.date > before_date) {
+        full_data.push(row);
+        if (row.condensation_top) {
+          var new_row = JSON.parse(JSON.stringify(row));
+          var cond = ((1023 - row.condensation_top) * 100 / 1023).toFixed(2);
+          row.data_level_1 = cond;
+          new_row.data = cond;
+          new_row.fan = row.fan_level_1_enabled;
+          data_level_1.push(new_row);
+        }
+      }
+    });
+    res.render(__dirname + '/pages/condensation', {
+      full_data: full_data,
+      data_level_1: data_level_1,
+      data_level_2: data_level_2,
+      data_level_3: data_level_3
+    });
+  });
+});
+
 app.get('/temperature/', function (req, res) {
   var day = 1;
   if (req.query['day']) {
@@ -89,7 +128,7 @@ app.get('/humidity/', function (req, res) {
     data.forEach(function (row) {
       if (row.date > before_date) {
         full_data.push(row);
-        if (row.humd_level_1 && row.humd_level_1 != "-127") {
+        if (row.humd_level_1) {
           var new_row = JSON.parse(JSON.stringify(row));
           var humd = ((1023 - row.humd_level_1) * 100 / 1023).toFixed(2);
           row.data_level_1 = humd;
@@ -97,7 +136,7 @@ app.get('/humidity/', function (req, res) {
           new_row.fan = row.fan_level_1_enabled;
           data_level_1.push(new_row);
         }
-        if (row.humd_level_2 && row.humd_level_2 != "-127") {
+        if (row.humd_level_2) {
           var new_row = JSON.parse(JSON.stringify(row));
           var humd = ((1023 - row.humd_level_2) * 100 / 1023).toFixed(2);
           row.data_level_2 = humd;
@@ -105,7 +144,7 @@ app.get('/humidity/', function (req, res) {
           new_row.fan = row.fan_level_2_enabled;
           data_level_2.push(new_row);
         }
-        if (row.temp_level_3 && row.temp_level_3 != "-127") {
+        if (row.temp_level_3) {
           var new_row = JSON.parse(JSON.stringify(row));
           var humd = ((1023 - row.humd_level_3) * 100 / 1023).toFixed(2);
           row.data_level_3 = humd;
