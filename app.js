@@ -42,7 +42,7 @@ app.get('/condensation/', function (req, res) {
           var cond = ((1023 - row.condensation_top) * 100 / 1023).toFixed(2);
           row.data_level_1 = cond;
           new_row.data = cond;
-          new_row.fan = row.fan_level_1_enabled;
+          new_row.fan = row.fan_level_3_enabled || row.fan_top_box_enabled;
           data_level_1.push(new_row);
         }
       }
