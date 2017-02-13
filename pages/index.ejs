@@ -12,9 +12,11 @@
       <h1 style="text-align: center;">Console Vermicomposter</h1>
       <ul class="nav nav-tabs nav-justified" style="margin-top: 60px;">
         <li role="dashboard" class="active"><a href="/">Dashboard</a></li>
+        <li role="condensation"><a href="/condensation/">Condensation</a></li>
         <li role="temperature"><a href="/temperature/">Temperature</a></li>
         <li role="humidity"><a href="/humidity/">Humidity</a></li>
       </ul>
+      <h5 style="text-align: center; margin-top: 30px;">Updated at <span id="date">--</span></h5>
       <h3>Couvercle :</h2>
       <p>Fan <span id="fan_top_box_enabled">--</span></p>
       <p>Condensation at <span id="condensation">--</span>%</p>
@@ -37,6 +39,11 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script>
       var data = <%- JSON.stringify(data) %>;
+
+      // Date
+      var date = new Date(data["date"] * 1000);
+      $("#date").text(date.toDateString());
+
       if (data["fan_top_box_enabled"]) {
         $("#fan_top_box_enabled").text("activate");
       } else {
