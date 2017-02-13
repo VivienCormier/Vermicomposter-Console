@@ -42,7 +42,7 @@
 
       // Date
       var date = new Date(data["date"] * 1000);
-      $("#date").text(date.toDateString());
+      $("#date").text(date.toLocaleDateString()+" "+date.toLocaleTimeString());
 
       if (data["fan_top_box_enabled"]) {
         $("#fan_top_box_enabled").text("activate");
