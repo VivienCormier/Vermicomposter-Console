@@ -12,7 +12,7 @@ module.exports = function (grunt) {
         shallowClone: true,
       },
       prod: {
-        servers: ['pi@192.168.0.13']
+        servers: ['pi@192.168.1.182']
       }
     }
   });
