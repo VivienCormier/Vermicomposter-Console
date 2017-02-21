@@ -174,8 +174,15 @@ var sp = new serialport(portName, {
 });
 
 sp.on('data', function(input) {
-    var json = JSON.parse(input);
-    saveData(json);
+    var json;
+    try {
+        json = JSON.parse(input);
+    } catch(e) {
+        console.log('Error parsing JSON: ', e);
+    }
+    if (json) {
+        saveData(json);
+    }
 });
 
 sp.on('error', function(err) {
