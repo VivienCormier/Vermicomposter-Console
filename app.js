@@ -76,26 +76,32 @@ app.get('/temperature/', function (req, res) {
     data.forEach(function (row) {
       if (row.date > before_date) {
         full_data.push(row);
-        if (row.temp_level_1 && row.temp_level_1 != "-127") {
-          var new_row = JSON.parse(JSON.stringify(row));
-          row.data_level_1 = row.temp_level_1;
-          new_row.data = row.temp_level_1;
-          new_row.fan = row.fan_level_1_enabled;
-          data_level_1.push(new_row);
+        if (row.temp_level_1) {
+          if (new_row > -10 && new_row < 50) {
+            var new_row = JSON.parse(JSON.stringify(row));
+            row.data_level_1 = row.temp_level_1;
+            new_row.data = row.temp_level_1;
+            new_row.fan = row.fan_level_1_enabled;
+            data_level_1.push(new_row);
+          }
         }
-        if (row.temp_level_2 && row.temp_level_2 != "-127") {
-          var new_row = JSON.parse(JSON.stringify(row));
-          row.data_level_2 = row.temp_level_2;
-          new_row.data = row.temp_level_2;
-          new_row.fan = row.fan_level_2_enabled;
-          data_level_2.push(new_row);
+        if (row.temp_level_2) {
+          if (new_row > -10 && new_row < 50) {
+            var new_row = JSON.parse(JSON.stringify(row));
+            row.data_level_2 = row.temp_level_2;
+            new_row.data = row.temp_level_2;
+            new_row.fan = row.fan_level_2_enabled;
+            data_level_2.push(new_row);
+          }
         }
-        if (row.temp_level_3 && row.temp_level_3 != "-127") {
-          var new_row = JSON.parse(JSON.stringify(row));
-          row.data_level_3 = row.temp_level_3;
-          new_row.data = row.temp_level_3;
-          new_row.fan = row.fan_level_3_enabled || row.fan_top_box_enabled;
-          data_level_3.push(new_row);
+        if (row.temp_level_3) {
+          if (new_row > -10 && new_row < 50) {
+            var new_row = JSON.parse(JSON.stringify(row));
+            row.data_level_3 = row.temp_level_3;
+            new_row.data = row.temp_level_3;
+            new_row.fan = row.fan_level_3_enabled || row.fan_top_box_enabled;
+            data_level_3.push(new_row);
+          }
         }
       }
     });
