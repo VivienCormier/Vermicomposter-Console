@@ -17,21 +17,32 @@
         <li role="humidity"><a href="/humidity/">Humidity</a></li>
       </ul>
       <h5 style="text-align: center; margin-top: 30px;">Updated at <span id="date">--</span></h5>
-      <h3>Couvercle :</h2>
-      <p>Fan <span id="fan_top_box_enabled">--</span></p>
-      <p>Condensation at <span id="condensation">--</span>%</p>
-      <h3>Level 3 :</h2>
-      <p>Fan <span id="fan_level_3_enabled">--</span></p>
-      <p>Humidity at <span id="humd_level_3">--</span>%</p>
-      <p>Temperature at <span id="temp_level_3">--</span>˚C</p>
-      <h3>Level 2 :</h2>
-      <p>Fan <span id="fan_level_2_enabled">--</span></p>
-      <p>Humidity at <span id="humd_level_2">--</span>%</p>
-      <p>Temperature at <span id="temp_level_2">--</span>˚C</p>
-      <h3>Level 1 :</h2>
-      <p>Fan <span id="fan_level_1_enabled">--</span></p>
-      <p>Humidity at <span id="humd_level_1">--</span>%</p>
-      <p>Temperature at <span id="temp_level_1">--</span>˚C</p>
+      <div class="panel panel-default">
+        <div class="panel-heading">Top</div>
+        <table class="table">
+          <thead>
+            <tr> <th>Level</th> <th>Condensation</th> <th>Fan</th></tr>
+          </thead>
+          <tbody>
+            <tr> <th scope="row">Top</th> <td><span id="condensation">--</span></td> <td><span id="fan_top_box_enabled">--</span></td></tr>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Level</div>
+        <table class="table">
+          <thead>
+            <tr> <th>Level</th> <th>Temperature</th> <th>Humidity</th> <th>Fan</th> </tr>
+          </thead>
+          <tbody>
+            <tr> <th scope="row">3</th> <td><span id="humd_level_3">--</span></td> <td><span id="temp_level_3">--</span></td> <td><span id="fan_level_3_enabled">--</span></td> </tr>
+            <tr> <th scope="row">2</th> <td><span id="humd_level_2">--</span></td> <td><span id="temp_level_2">--</span></td> <td><span id="fan_level_2_enabled">--</span></td>
+            <tr> <th scope="row">1</th> <td><span id="humd_level_1">--</span></td> <td><span id="temp_level_1">--</span></td> <td><span id="fan_level_1_enabled">--</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <h3>Error :</h2>
       <p><span id="error_message">No error</span></p>
     </div>
@@ -39,45 +50,92 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script>
       var data = <%- JSON.stringify(data) %>;
-
+      var max_temp = 26;
+      var min_temp = 14;
+      var max_humd = 90;
+      var min_humd = 50;
+      var max_cond = 80;
       // Date
       var date = new Date(data["date"] * 1000);
       $("#date").text(date.toLocaleDateString()+" "+date.toLocaleTimeString());
 
       if (data["fan_top_box_enabled"]) {
-        $("#fan_top_box_enabled").text("activate");
+        $("#fan_top_box_enabled").text("On");
+        $("#fan_top_box_enabled").toggleClass('label label-primary');
       } else {
-        $("#fan_top_box_enabled").text("deactivate");
+        $("#fan_top_box_enabled").text("Off");
+        $("#fan_top_box_enabled").toggleClass('label label-default');
       }
       var condensation_top = ((1023 - data["condensation_top"]) * 100 / 1023).toFixed(2);
-      $("#condensation").text(condensation_top);
+      $("#condensation").text(condensation_top+"%");
+      if (condensation_top > max_cond) {
+        $("#condensation").toggleClass('label label-danger');
+      } else {
+        $("#condensation").toggleClass('label label-success');
+      }
       // Level 3
       if (data["fan_level_3_enabled"]) {
-        $("#fan_level_3_enabled").text("activate");
+        $("#fan_level_3_enabled").text("On");
+        $("#fan_level_3_enabled").toggleClass('label label-primary');
       } else {
-        $("#fan_level_3_enabled").text("deactivate");
+        $("#fan_level_3_enabled").text("Off");
+        $("#fan_level_3_enabled").toggleClass('label label-default');
       }
       var humd_level_3 = ((1023 - data["humd_level_3"]) * 100 / 1023).toFixed(2);
-      $("#humd_level_3").text(humd_level_3);
-      $("#temp_level_3").text(data["temp_level_3"]);
+      $("#humd_level_3").text(humd_level_3+"%");
+      $("#temp_level_3").text(data["temp_level_3"]+" ˚C");
+      if (data["temp_level_3"] > max_temp || data["temp_level_3"] < min_temp) {
+        $("#temp_level_3").toggleClass('label label-danger');
+      } else {
+        $("#temp_level_3").toggleClass('label label-success');
+      }
+      if (humd_level_3 > max_humd || humd_level_3 < min_humd) {
+        $("#humd_level_3").toggleClass('label label-danger');
+      } else {
+        $("#humd_level_3").toggleClass('label label-success');
+      }
       // Level 2
       if (data["fan_level_2_enabled"]) {
-        $("#fan_level_2_enabled").text("activate");
+        $("#fan_level_2_enabled").text("On");
+        $("#fan_level_2_enabled").toggleClass('label label-primary');
       } else {
-        $("#fan_level_2_enabled").text("deactivate");
+        $("#fan_level_2_enabled").text("Off");
+        $("#fan_level_2_enabled").toggleClass('label label-default');
       }
       var humd_level_2 = ((1023 - data["humd_level_2"]) * 100 / 1023).toFixed(2);
-      $("#humd_level_2").text(humd_level_2);
-      $("#temp_level_2").text(data["temp_level_2"]);
+      $("#humd_level_2").text(humd_level_2+"%");
+      $("#temp_level_2").text(data["temp_level_2"]+" ˚C");
+      if (data["temp_level_2"] > max_temp || data["temp_level_2"] < min_temp) {
+        $("#temp_level_2").toggleClass('label label-danger');
+      } else {
+        $("#temp_level_2").toggleClass('label label-success');
+      }
+      if (humd_level_2 > max_humd || humd_level_2 < min_humd) {
+        $("#humd_level_2").toggleClass('label label-danger');
+      } else {
+        $("#humd_level_2").toggleClass('label label-success');
+      }
       // Level 1
       if (data["fan_level_1_enabled"]) {
-        $("#fan_level_1_enabled").text("activate");
+        $("#fan_level_1_enabled").text("On");
+        $("#fan_level_1_enabled").toggleClass('label label-primary');
       } else {
-        $("#fan_level_1_enabled").text("deactivate");
+        $("#fan_level_1_enabled").text("Off");
+        $("#fan_level_1_enabled").toggleClass('label label-default');
       }
       var humd_level_1 = ((1023 - data["humd_level_1"]) * 100 / 1023).toFixed(2);
-      $("#humd_level_1").text(humd_level_1);
-      $("#temp_level_1").text(data["temp_level_1"]);
+      $("#humd_level_1").text(humd_level_1+"%");
+      $("#temp_level_1").text(data["temp_level_1"]+" ˚C");
+      if (data["temp_level_1"] > max_temp || data["temp_level_1"] < min_temp) {
+        $("#temp_level_1").toggleClass('label label-danger');
+      } else {
+        $("#temp_level_1").toggleClass('label label-success');
+      }
+      if (humd_level_1 > max_humd || humd_level_1 < min_humd) {
+        $("#humd_level_1").toggleClass('label label-danger');
+      } else {
+        $("#humd_level_1").toggleClass('label label-success');
+      }
       // Error
       if (data["error_message"]) {
         $("#error_message").text(data["error_message"]);
